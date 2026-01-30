@@ -32,7 +32,4 @@ Google Analytics tracking has been integrated for:
 *   Application Load (Page View)
 *   Snippet Uploads (Add to Library)
 
-**Important:** You must update the Measurement ID.
-1.  Open `index.html`.
-2.  Search for `G-MEASUREMENT_ID`.
-3.  Replace both occurrences with your actual Google Analytics Measurement ID (e.g., `G-ABC1234567`).
+The Measurement ID `G-78L2G5CSHB` has been configured in `index.html`.
