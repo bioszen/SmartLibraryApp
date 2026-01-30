@@ -3318,9 +3318,14 @@
 
             <div class="manual-button-container">
                 <button id="btn-open-manual" class="btn-manual" title="Open User Manual" data-i18n="btn-manual"
-                    data-i18n-title="btn-manual">📖 View Manual</button>
+                    style="width: 100%; border-radius: 8px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;">
+                    <span>📚</span> Manual de Usuario
+                </button>
+                <div
+                    style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.8rem; text-align: center; opacity: 0.7;">
+                    🛡️ Datos almacenados localmente
+                </div>
             </div>
-
             <div class="filter-group">
                 <h3 data-i18n="filter-type">Type</h3>
                 <div class="pill-selector" id="type-selector">
@@ -3697,6 +3702,12 @@
                             inteligente para la gestión de comandos. Diseñado para quienes necesitan usar fragmentos de
                             código repetitivos pero con variaciones mínimas (rutas, nombres, parámetros), transformando
                             scripts estáticos en herramientas dinámicas.</p>
+                        <p style="font-size: 1.1rem; line-height: 1.6; margin-top: 1rem;"><strong>Privacidad
+                                Garantizada:</strong>
+                            Tus comandos y snippets se almacenan exclusivamente de manera local en tu navegador
+                            (LocalStorage).
+                            Smart Library solo actúa como una interfaz para leer, organizar y facilitar su uso.
+                            Ningún dato es enviado a servidores externos.</p>
                     </div>
 
                     <div class="manual-section">
