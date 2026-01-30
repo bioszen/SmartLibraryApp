@@ -32,13 +32,13 @@ Google Analytics tracking has been integrated for:
 *   Application Load (Page View)
 *   Snippet Uploads (Add to Library)
 
-The Measurement ID `G-78L2G5CSHB` has been configured in `index.html`.
+The Google Analytics Measurement ID has been configured in `index.html`.
 
-## Privacidad
+## Privacy
 
-**Tus datos son tuyos.**
-Smart Code Library almacena todos tus snippets, colecciones y configuraciones exclusivamente en el **Almacenamiento Local (LocalStorage)** de tu navegador.
-*   No hay servidores backend.
-*   No hay bases de datos en la nube.
-*   La aplicación solo lee y organiza la información que tú guardas.
-*   El único dato enviado fuera es la analítica de uso anónima a Google Analytics.
+**Your Data is Yours.**
+Smart Code Library stores all your snippets, collections, and configurations exclusively in your browser's **Local Storage (LocalStorage)**.
+*   There are no backend servers.
+*   There are no cloud databases.
+*   The application only reads and organizes the information you save locally.
+*   The only data sent externally is anonymous usage analytics to Google Analytics.
