@@ -1,7 +1,18 @@
 # Smart Code Library
 
+![Smart Library Preview](og-image.png)
+
 ## Overview
-Smart Code Library is a single-file web application for managing and organizing code snippets.
+**Smart Code Library** is a sleek, premium, and privacy-focused single-file web application designed to help you organize and manage your code snippets with maximum efficiency.
+
+## 🚀 Key Benefits
+
+*   **Zero-Setup Productivity**: A single-file HTML solution that runs directly in your browser. No databases to configure, no servers to maintain.
+*   **Privacy by Design**: Your code stays with you. All data is saved exclusively in your browser's Local Storage, ensuring total privacy and offline access.
+*   **Pro-Grade Editor**: Integrated with the **Monaco Editor** (the same engine behind VS Code) for high-performance syntax highlighting and intelligent code editing.
+*   **Instant Organization**: Powerful filtering by language, type, and tags, combined with real-time search, helps you find the right snippet in seconds.
+*   **Bilingual & Documented**: Fully localized in English and Spanish, featuring a built-in interactive manual to get you started immediately.
+
 
 ## Deployment to GitHub Pages
 
