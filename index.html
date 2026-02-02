@@ -7437,53 +7437,44 @@
 
         function suggestTags(code, lang) {
             const tags = new Set();
+            const codeLower = code.toLowerCase();
 
-            // Add language tag
+            // 1. Always add the language itself
             const langTag = (lang || 'other').toLowerCase();
             tags.add(langTag);
 
-            // Keyword analysis
-            const keywords = {
-                'plot': ['grafico', 'visualizacion'],
-                'ggplot': ['grafico', 'ggplot2'],
-                'boxplot': ['grafico', 'distribucion'],
-                'heatmap': ['grafico', 'heatmap'],
-                'read': ['io', 'datos'],
-                'write': ['io', 'guardar'],
-                'csv': ['csv', 'datos'],
-                'excel': ['excel', 'datos'],
-                'test': ['estadistica', 'analisis'],
-                'anova': ['estadistica', 'anova'],
-                'mean': ['estadistica', 'procesamiento'],
-                'average': ['estadistica', 'procesamiento'],
-                'filter': ['procesamiento', 'dplyr'],
-                'dplyr': ['procesamiento', 'dplyr'],
-                'for': ['loop', 'automatizacion'],
-                'function': ['funcion', 'avanzado'],
-                'class': ['clase', 'avanzado'],
-                'api': ['api', 'web'],
-                'database': ['database', 'sql'],
-                'sql': ['database', 'sql'],
-                'growth': ['microbiologia', 'growth rates'],
-                'od': ['microbiologia', 'growth rates'],
-                'rna': ['bioinfo', 'rnaseq'],
-                'gene': ['bioinfo', 'rnaseq'],
-                'enrich': ['bioinfo', 'enriquecimiento'],
-                'qtl': ['bioinfo', 'genetica'],
-                'image': ['imagej', 'procesamiento']
-            };
-
-            const codeLower = code.toLowerCase();
-            for (const [keyword, keywordTags] of Object.entries(keywords)) {
-                if (codeLower.includes(keyword)) {
-                    keywordTags.forEach(tag => tags.add(tag));
+            // 2. Dynamic Library/Package Detection
+            if (lang === 'R') {
+                // Matches: library(pkg), require(pkg), p_load(pkg)
+                const rRegex = /(?:library|require|p_load)\s*\(\s*(?:package\s*=\s*)?["']?([a-zA-Z0-9\.]+)/g;
+                let match;
+                while ((match = rRegex.exec(code)) !== null) {
+                    if (match[1]) tags.add(match[1].toLowerCase());
                 }
-            }
+                // Tidyverse special case (common meta-package)
+                if (code.includes('tidyverse')) tags.add('tidyverse');
 
-            // Detect complexity
-            const lines = code.split('\n').length;
-            if (lines > 100) tags.add('completo');
-            else if (lines < 20) tags.add('simple');
+            } else if (lang === 'Python') {
+                // Matches: import pkg, from pkg import...
+                const pyImportRegex = /^\s*import\s+([a-zA-Z0-9_]+)/gm;
+                const pyFromRegex = /^\s*from\s+([a-zA-Z0-9_]+)\s+import/gm;
+
+                let match;
+                while ((match = pyImportRegex.exec(code)) !== null) {
+                    if (match[1]) tags.add(match[1].toLowerCase());
+                }
+                while ((match = pyFromRegex.exec(code)) !== null) {
+                    if (match[1]) tags.add(match[1].toLowerCase());
+                }
+            } else if (lang === 'Shell' || lang === 'Bash') {
+                // Common CLI tools
+                const tools = ['docker', 'git', 'kubectl', 'npm', 'pip', 'conda', 'tar', 'awk', 'sed', 'curl', 'wget'];
+                tools.forEach(tool => {
+                    if (new RegExp(`^${tool}\\s+`, 'm').test(code)) {
+                        tags.add(tool);
+                    }
+                });
+            }
 
             return Array.from(tags);
         }

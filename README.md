@@ -53,3 +53,10 @@ Smart Code Library stores all your snippets, collections, and configurations exc
 *   There are no cloud databases.
 *   The application only reads and organizes the information you save locally.
 *   The only data sent externally is anonymous usage analytics to Google Analytics.
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**© 2026 BIOSZEN. All Rights Reserved.**
+While the source code is open-source under MIT, the "SmartLib SZ" brand, logo, and active deployment are proprietary assets of the author.
