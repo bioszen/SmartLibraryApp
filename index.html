@@ -6840,7 +6840,13 @@
             if (titleField) titleField.value = title;
 
             const tagsField = document.getElementById('new-tags');
-            if (tagsField) tagsField.value = suggestedTags.join(', ');
+            if (tagsField) {
+                 let finalTags = [...suggestedTags];
+                 if (typeof currentBatchTag !== 'undefined' && currentBatchTag) {
+                     finalTags.push(currentBatchTag);
+                 }
+                 tagsField.value = finalTags.join(', ');
+            }
 
             // Set language
             const langSelect = document.getElementById('new-lang');
@@ -8350,6 +8356,7 @@
         // Queue for storing pending files
         let pendingFilesQueue = [];
         let isProcessingQueue = false;
+        let currentBatchTag = null;
 
         // Get DOM elements
         const fileInput = document.getElementById('file-upload');
@@ -8404,6 +8411,17 @@
             // Add files to queue
             pendingFilesQueue = supported;
 
+            if (supported.length > 1) {
+                const promptMsg = typeof t === 'function' ? t('batch-tag-prompt') : (typeof currentLang !== 'undefined' && currentLang === 'es' ? '¿Quieres asignar un tag a este grupo?' : 'Assign a tag to this group?');
+                if (confirm(promptMsg)) {
+                    const tagMsg = typeof t === 'function' ? t('batch-tag-input') : 'Tag:';
+                    const tag = prompt(tagMsg);
+                    if (tag && tag.trim()) {
+                        currentBatchTag = tag.trim();
+                    }
+                }
+            }
+
             showToast(t('toast-files-selected', { count: supported.length }), 'info');
 
             // Start processing the first file
@@ -8413,6 +8431,7 @@
         function processNextFile() {
             if (pendingFilesQueue.length === 0) {
                 isProcessingQueue = false;
+                currentBatchTag = null; // Reset batch tag
                 // Reset title when done
                 const addModalHeader = document.querySelector('#add-modal h2');
                 if (addModalHeader) addModalHeader.textContent = t('add-modal-title') || '➕ Agregar Nuevo Comando';
