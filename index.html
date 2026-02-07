@@ -4903,15 +4903,39 @@
                 btn.style.background = "#22c55e";
             }
 
-            setTimeout(() => {
-                if (btn) {
-                    btn.textContent = originalText;
-                    btn.style.background = "";
-                }
-                addModal.classList.add('hidden');
-                // Use showToast instead of alert for better UX and consistency
-                showToast(message || t('toast-added-msg', { title: title }), 'success');
-            }, 500); // Reduced delay for better responsiveness
+            // If processing a queue, auto-advance to next file instead of closing
+            if (typeof isProcessingQueue !== 'undefined' && isProcessingQueue && typeof pendingFilesQueue !== 'undefined' && pendingFilesQueue.length > 0) {
+                setTimeout(() => {
+                    if (btn) {
+                        btn.textContent = originalText;
+                        btn.style.background = "";
+                    }
+                    // Do NOT close modal, just process next
+                    if (typeof processNextFile === 'function') {
+                        processNextFile();
+                    }
+                }, 800);
+            } else {
+                // Normal behavior: close modal after delay
+                setTimeout(() => {
+                    if (btn) {
+                        btn.textContent = originalText;
+                        btn.style.background = "";
+                    }
+                    addModal.classList.add('hidden');
+
+                    // Reset queue state if finished
+                    if (typeof isProcessingQueue !== 'undefined') {
+                        isProcessingQueue = false;
+                        currentBatchTag = null;
+                        const modalTitle = document.querySelector('#add-modal h2');
+                        if (modalTitle) modalTitle.textContent = t('add-modal-title');
+                    }
+
+                    // Use showToast instead of alert for better UX and consistency
+                    showToast(message || t('toast-added-msg', { title: title }), 'success');
+                }, 500);
+            }
         }
 
         // Check for bookmarklet import on page load
@@ -8433,6 +8457,12 @@
         }
 
         function processNextFile() {
+            // Ensure modal is visible
+            const addModal = document.getElementById('add-modal');
+            if (addModal && addModal.classList.contains('hidden')) {
+                addModal.classList.remove('hidden');
+            }
+
             if (pendingFilesQueue.length === 0) {
                 isProcessingQueue = false;
                 currentBatchTag = null; // Reset batch tag
@@ -8471,26 +8501,7 @@
         }
 
         // Hook into the "Add to Library" button to process next file after saving
-        const addToLibraryBtn = document.getElementById('btn-add-to-library');
-        if (addToLibraryBtn) {
-            addToLibraryBtn.addEventListener('click', () => {
-                // After a short delay (to allow save to complete which is handled by other listener), process next file
-                if (isProcessingQueue) {
-                    setTimeout(() => {
-                        if (pendingFilesQueue.length > 0) {
-                            processNextFile();
-                        } else {
-                            // Reset modal title
-                            const modalTitle = document.querySelector('#add-modal h2');
-                            if (modalTitle) {
-                                modalTitle.textContent = t('add-modal-title');
-                            }
-                            isProcessingQueue = false;
-                        }
-                    }, 1000);
-                }
-            });
-        }
+
 
         // Also hook into modal close to clear queue
         const addModalCloseBtn = document.querySelector('.close-add-modal');
