@@ -4894,9 +4894,12 @@
                 });
             }
             const btn = document.getElementById('btn-add-to-library');
-            const originalText = btn ? btn.textContent : '';
+            let originalText = '';
             if (btn) {
-                btn.textContent = t('btn-added');
+                originalText = btn.textContent;
+                // Use translation with emoji
+                const addedText = typeof t === 'function' ? t('btn-added') : ' Añadido!';
+                btn.textContent = addedText;
                 btn.style.background = "#22c55e";
             }
 
@@ -4906,8 +4909,9 @@
                     btn.style.background = "";
                 }
                 addModal.classList.add('hidden');
-                alert(message || ` "${title}" ${t('toast-added-msg')}`);
-            }, 1500);
+                // Use showToast instead of alert for better UX and consistency
+                showToast(message || t('toast-added-msg', { title: title }), 'success');
+            }, 500); // Reduced delay for better responsiveness
         }
 
         // Check for bookmarklet import on page load
@@ -6841,11 +6845,11 @@
 
             const tagsField = document.getElementById('new-tags');
             if (tagsField) {
-                 let finalTags = [...suggestedTags];
-                 if (typeof currentBatchTag !== 'undefined' && currentBatchTag) {
-                     finalTags.push(currentBatchTag);
-                 }
-                 tagsField.value = finalTags.join(', ');
+                let finalTags = [...suggestedTags];
+                if (typeof currentBatchTag !== 'undefined' && currentBatchTag) {
+                    finalTags.push(currentBatchTag);
+                }
+                tagsField.value = finalTags.join(', ');
             }
 
             // Set language
