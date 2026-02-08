@@ -3877,6 +3877,15 @@
         const translations = {
             en: {
                 "var-label-rds": "RDS File",
+                "var-label-file": "File",
+                "var-label-image": "Image File",
+                "var-label-csv": "CSV File",
+                "var-label-png": "PNG Image",
+                "var-label-pdf": "PDF File",
+                "var-label-workdir": "Working Directory",
+                "var-label-outdir": "Output Directory",
+                "var-label-indir": "Input Directory",
+                "var-label-results": "Results Directory",
                 "btn-manual": "📖 View Manual",
                 "filter-type": "Type",
                 "all": "All",
@@ -3912,6 +3921,7 @@
                 "preview": "Preview",
                 "preview-title": "Preview",
                 "btn-copy": "Copy Code",
+                "btn-fix": "🔧 Fix",
                 "btn-quick-add": "⚡ Quick Add",
                 "btn-edit-current": "📝 Edit",
                 "btn-edit-title": "Edit this command",
@@ -3981,6 +3991,7 @@
                 "toast-cleaning-applied": "Cleaning applied",
                 "toast-copy-success": "Copied!",
                 "toast-downloading": "Downloading: {name}",
+                "toast-files-selected": "{count} file(s) selected",
                 "toast-selected": "{count} selected",
                 "toast-deselect-all": "Deselect all",
                 "toast-select-all": "Select all",
@@ -4045,6 +4056,16 @@
                 "confirm-cancel-batch": "You still have {count} file(s) pending.\n\nDo you want to cancel the upload of the remaining files?\n\nOK = Yes, cancel | Cancel = Continue loading."
             },
             es: {
+                "var-label-rds": "Archivo RDS",
+                "var-label-file": "Archivo",
+                "var-label-image": "Archivo de imagen",
+                "var-label-csv": "Archivo CSV",
+                "var-label-png": "Imagen PNG",
+                "var-label-pdf": "Archivo PDF",
+                "var-label-workdir": "Directorio de trabajo",
+                "var-label-outdir": "Directorio de salida",
+                "var-label-indir": "Directorio de entrada",
+                "var-label-results": "Directorio de resultados",
                 "btn-manual": "📖 Ver Manual",
                 "filter-type": "Tipo",
                 "all": "Todos",
@@ -4080,6 +4101,7 @@
                 "preview": "Vista Previa",
                 "preview-title": "Vista Previa",
                 "btn-copy": "Copiar Código",
+                "btn-fix": "🔧 Corregir",
                 "btn-quick-add": "⚡ Carga Rápida",
                 "btn-edit-current": "📝 Editar",
                 "btn-edit-title": "Editar este comando",
@@ -4149,6 +4171,7 @@
                 "toast-cleaning-applied": "¡Limpieza aplicada!",
                 "toast-copy-success": "¡Copiado!",
                 "toast-downloading": "Descargado: {name}",
+                "toast-files-selected": "{count} archivo(s) seleccionado(s)",
                 "toast-selected": "{count} seleccionados",
                 "toast-deselect-all": "Deseleccionar todo",
                 "toast-select-all": "Seleccionar todo",
@@ -5665,6 +5688,13 @@
             // Exception: PowerShell handles both, but \ is native
             // For R/Python on Windows, / is preferred but \ is common.
             // We only warn if the "wrong" one is found.
+
+            if (wrong === '\\') {
+                const valueWithoutEscapedBackslashes = value.replace(/\\\\/g, '');
+                if (!valueWithoutEscapedBackslashes.includes('\\')) return null;
+            } else if (!value.includes(wrong)) {
+                return null;
+            }
 
             if (value.includes(wrong)) {
                 return {

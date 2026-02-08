@@ -714,9 +714,53 @@
 
 
         .close-modal:hover {
-
             color: var(--text-main);
+        }
 
+        /* Navigation Arrows for Modal */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .nav-arrow:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .nav-arrow.left {
+            left: -60px;
+        }
+
+        .nav-arrow.right {
+            right: -60px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-arrow.left {
+                left: 10px;
+                background: rgba(0, 0, 0, 0.8);
+            }
+
+            .nav-arrow.right {
+                right: 10px;
+                background: rgba(0, 0, 0, 0.8);
+            }
         }
 
 
@@ -3442,37 +3486,39 @@
 
     <!-- Modal for Snippet Details / Configuration -->
     <div id="snippet-modal" class="modal hidden">
-        <div class="modal-content glass-panel">
-            <span class="close-modal">&times;</span>
-            <h2 id="modal-title" data-i18n="modal-title">Configurar Comando</h2>
-            <p id="modal-desc" class="text-muted"></p>
+    <div class="modal-content glass-panel" style="position: relative;">
+        <button id="prev-snippet" class="nav-arrow left" title="Previous Command">&lt;</button>
+        <button id="next-snippet" class="nav-arrow right" title="Next Command">&gt;</button>
+        <span class="close-modal">&times;</span>
+        <h2 id="modal-title" data-i18n="modal-title">Configurar Comando</h2>
+        <p id="modal-desc" class="text-muted"></p>
 
-            <div class="modal-body">
-                <div class="split-view">
-                    <div class="config-form">
-                        <h3 data-i18n="variables-title">Variables</h3>
-                        <div id="modal-variables-form">
-                            <!-- Input fields generated here -->
-                        </div>
-                    </div>
-                    <div class="preview-code">
-                        <h3 data-i18n="preview-title">Preview</h3>
-                        <pre><code id="modal-code-preview" class="language-r"></code></pre>
-                        <div class="actions">
-                            <button id="btn-copy" class="btn-primary" data-i18n="btn-copy">Copy Code</button>
-                            <button id="btn-edit-current" class="btn-secondary" title="Edit this command"
-                                data-i18n="btn-edit-current" data-i18n-title="btn-edit-title">📝 Edit</button>
-                            <button id="btn-download-current" class="btn-secondary" title="Download processed code"
-                                data-i18n="btn-download" data-i18n-title="btn-download-title">⬇️ Download</button>
-                        </div>
+        <div class="modal-body">
+            <div class="split-view">
+                <div class="config-form">
+                    <h3 data-i18n="variables-title">Variables</h3>
+                    <div id="modal-variables-form">
+                        <!-- Input fields generated here -->
                     </div>
                 </div>
-                <div class="related-section">
-                    <h3 data-i18n="related-title">Related snippets</h3>
-                    <div id="related-snippets" class="related-list"></div>
+                <div class="preview-code">
+                    <h3 data-i18n="preview-title">Preview</h3>
+                    <pre><code id="modal-code-preview" class="language-r"></code></pre>
+                    <div class="actions">
+                        <button id="btn-copy" class="btn-primary" data-i18n="btn-copy">Copy Code</button>
+                        <button id="btn-edit-current" class="btn-secondary" title="Edit this command"
+                            data-i18n="btn-edit-current" data-i18n-title="btn-edit-title">📝 Edit</button>
+                        <button id="btn-download-current" class="btn-secondary" title="Download processed code"
+                            data-i18n="btn-download" data-i18n-title="btn-download-title">⬇️ Download</button>
+                    </div>
                 </div>
             </div>
+            <div class="related-section">
+                <h3 data-i18n="related-title">Related snippets</h3>
+                <div id="related-snippets" class="related-list"></div>
+            </div>
         </div>
+    </div>
     </div>
 
     <!-- Modal for Adding New Snippet -->
@@ -3685,6 +3731,22 @@
     </div>
     <!-- Toast Notifications Container -->
     <div id="toast-container"></div>
+
+    <!-- Custom Dialog Modal -->
+    <div id="custom-dialog-modal" class="modal hidden" style="z-index: 2000;">
+        <div class="modal-content glass-panel" style="max-width: 400px; height: auto; min-height: 200px;">
+            <h3 id="custom-dialog-title" style="margin-top: 0;">Title</h3>
+            <p id="custom-dialog-message" class="text-muted" style="margin: 15px 0;">Message</p>
+            <div id="custom-dialog-input-container" class="hidden" style="margin-bottom: 20px;">
+                <input type="text" id="custom-dialog-input" class="full-width"
+                    style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-dark); color: white;">
+            </div>
+            <div class="dialog-buttons" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: auto;">
+                <button id="custom-dialog-cancel" class="btn-secondary">Cancel</button>
+                <button id="custom-dialog-ok" class="btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Manual Modal -->
     <div id="manual-modal" class="modal hidden">
@@ -3908,6 +3970,15 @@
         const translations = {
             en: {
                 "var-label-rds": "RDS File",
+                "var-label-file": "File",
+                "var-label-image": "Image File",
+                "var-label-csv": "CSV File",
+                "var-label-png": "PNG Image",
+                "var-label-pdf": "PDF File",
+                "var-label-workdir": "Working Directory",
+                "var-label-outdir": "Output Directory",
+                "var-label-indir": "Input Directory",
+                "var-label-results": "Results Directory",
                 "btn-manual": "📖 View Manual",
                 "privacy-badge": "🛡️ Data stored locally",
                 "filter-type": "Type",
@@ -3944,6 +4015,7 @@
                 "preview": "Preview",
                 "preview-title": "Preview",
                 "btn-copy": "Copy Code",
+                "btn-fix": "🔧 Fix",
                 "btn-quick-add": "⚡ Quick Add",
                 "btn-edit-current": "📝 Edit",
                 "btn-edit-title": "Edit this command",
@@ -4013,6 +4085,7 @@
                 "toast-cleaning-applied": "Cleaning applied",
                 "toast-copy-success": "Copied!",
                 "toast-downloading": "Downloading: {name}",
+                "toast-files-selected": "{count} file(s) selected",
                 "toast-selected": "{count} selected",
                 "toast-deselect-all": "Deselect all",
                 "toast-select-all": "Select all",
@@ -4066,6 +4139,8 @@
                 "prompt-new-col": "New collection name:",
                 "prompt-rename-col": "New name for the collection:",
                 "prompt-new-var": "Variable name:",
+                "batch-tag-prompt": "Batch tag to apply:",
+                "batch-tag-input": "Ex: analysis, report",
                 "toast-added-msg": "added successfully to your library!",
                 "btn-added": "Added!",
                 "validation-title": "Syntax Validation",
@@ -4077,6 +4152,16 @@
                 "confirm-cancel-batch": "You still have {count} file(s) pending.\n\nDo you want to cancel the upload of the remaining files?\n\nOK = Yes, cancel | Cancel = Continue loading."
             },
             es: {
+                "var-label-rds": "Archivo RDS",
+                "var-label-file": "Archivo",
+                "var-label-image": "Archivo de imagen",
+                "var-label-csv": "Archivo CSV",
+                "var-label-png": "Imagen PNG",
+                "var-label-pdf": "Archivo PDF",
+                "var-label-workdir": "Directorio de trabajo",
+                "var-label-outdir": "Directorio de salida",
+                "var-label-indir": "Directorio de entrada",
+                "var-label-results": "Directorio de resultados",
                 "btn-manual": "📖 Ver Manual",
                 "privacy-badge": "🛡️ Datos almacenados localmente",
                 "filter-type": "Tipo",
@@ -4113,6 +4198,7 @@
                 "preview": "Vista Previa",
                 "preview-title": "Vista Previa",
                 "btn-copy": "Copiar Código",
+                "btn-fix": "🔧 Corregir",
                 "btn-quick-add": "⚡ Carga Rápida",
                 "btn-edit-current": "📝 Editar",
                 "btn-edit-title": "Editar este comando",
@@ -4182,6 +4268,7 @@
                 "toast-cleaning-applied": "¡Limpieza aplicada!",
                 "toast-copy-success": "¡Copiado!",
                 "toast-downloading": "Descargado: {name}",
+                "toast-files-selected": "{count} archivo(s) seleccionado(s)",
                 "toast-selected": "{count} seleccionados",
                 "toast-deselect-all": "Deseleccionar todo",
                 "toast-select-all": "Seleccionar todo",
@@ -4235,6 +4322,8 @@
                 "prompt-new-col": "Nombre de la nueva colección:",
                 "prompt-rename-col": "Nuevo nombre de la colección:",
                 "prompt-new-var": "Nombre de la variable:",
+                "batch-tag-prompt": "Tag por lote a aplicar:",
+                "batch-tag-input": "Ej: analisis, reporte",
                 "toast-added-msg": "agregado exitosamente a tu biblioteca!",
                 "btn-added": "¡Agregado!",
                 "validation-title": "Validación de Sintaxis",
@@ -5788,6 +5877,13 @@
             // For R/Python on Windows, / is preferred but \ is common.
             // We only warn if the "wrong" one is found.
 
+            if (wrong === '\\') {
+                const valueWithoutEscapedBackslashes = value.replace(/\\\\/g, '');
+                if (!valueWithoutEscapedBackslashes.includes('\\')) return null;
+            } else if (!value.includes(wrong)) {
+                return null;
+            }
+
             if (value.includes(wrong)) {
                 return {
                     preferred,
@@ -5960,8 +6056,75 @@
 
             updateCodePreview();
             renderRelatedSnippets(snippet);
+            setupSnippetNavigation(snippet);
 
             modal.classList.remove('hidden');
+        }
+
+        function setupSnippetNavigation(currentSnippet) {
+            const prevBtn = document.getElementById('prev-snippet');
+            const nextBtn = document.getElementById('next-snippet');
+
+            if (!prevBtn || !nextBtn) return;
+
+            // Determine the current list of snippets based on filters
+            // We need to re-apply filters to get the current visible list order
+            // This ensures navigation matches what the user sees in the grid
+
+            const term = (searchInput.value || '').toLowerCase(); // Get real search term
+
+            let visibleSnippets = currentSnippets.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const description = (item.description || '').toLowerCase();
+                const tags = Array.isArray(item.tags) ? item.tags : [];
+                const language = item.language || 'Other';
+                const code = (item.code || '').toLowerCase();
+                const searchCode = !!searchInCode;
+
+                // Text Match
+                const matchesText = title.includes(term) ||
+                    description.includes(term) ||
+                    tags.some(t => t.toLowerCase().includes(term)) ||
+                    (searchCode && code.includes(term));
+
+                const matchesLang = activeFilters.lang === 'all' || language === activeFilters.lang;
+                const isScript = item.type === 'script';
+                const matchesType = activeFilters.type === 'all' || (activeFilters.type === 'script' ? isScript : !isScript);
+                const matchesTags = activeFilters.tags.size === 0 || Array.from(activeFilters.tags).every(tag => tags.includes(tag));
+
+                // Collection match logic matches filterSnippets
+                const matchesCollection = activeCollectionId === 'all' ||
+                    (collections.find(c => c.id === activeCollectionId)?.snippetIds || []).includes(item.id);
+
+                return matchesText && matchesLang && matchesTags && matchesType && matchesCollection;
+            });
+
+            // If no filters active or list is empty, default to full list or current
+            if (visibleSnippets.length === 0) visibleSnippets = [currentSnippet];
+
+            const currentIndex = visibleSnippets.findIndex(s => s.id === currentSnippet.id);
+
+            // Handle Previous
+            if (currentIndex > 0) {
+                prevBtn.style.display = 'flex';
+                prevBtn.onclick = () => openSnippetModal(visibleSnippets[currentIndex - 1]);
+            } else {
+                prevBtn.style.display = 'none';
+            }
+
+            // Handle Next
+            if (currentIndex !== -1 && currentIndex < visibleSnippets.length - 1) {
+                nextBtn.style.display = 'flex';
+                nextBtn.onclick = () => openSnippetModal(visibleSnippets[currentIndex + 1]);
+            } else {
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        function isInteractiveField(element) {
+            if (!(element instanceof HTMLElement)) return false;
+            const tag = element.tagName.toLowerCase();
+            return tag === 'input' || tag === 'textarea' || tag === 'select' || element.isContentEditable;
         }
 
         if (modalVarsForm) {
@@ -6278,6 +6441,23 @@
             closeAddModalBtn.addEventListener('click', () => {
                 addModal.classList.add('hidden');
                 resetAddModal();
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (!modal || modal.classList.contains('hidden')) return;
+                if (isInteractiveField(document.activeElement)) return;
+
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    const btn = document.getElementById(e.key === 'ArrowLeft' ? 'prev-snippet' : 'next-snippet');
+                    if (btn && btn.style.display !== 'none') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                }
+
+                if (e.key === 'Escape') {
+                    modal.classList.add('hidden');
+                }
             });
 
             // Close on click outside
@@ -7214,6 +7394,35 @@
             const detectedVars = [];
             let match;
 
+            function pathLooksLikeDirectory(value) {
+                const raw = String(value || '').trim();
+                if (!raw) return false;
+                if (!/[\\/]/.test(raw) && !/^[A-Za-z]:$/.test(raw)) return false;
+                if (/\.(csv|tsv|txt|xlsx?|parquet|feather|arrow|png|jpe?g|gif|bmp|svg|pdf|rds|fa|fasta|fastq|fq|gtf|gff3?|vcf|bed|bam|sam|bcf|cram|json|ya?ml|toml|ini|cfg|conf|xml|html?|md|rst|tex|db|sqlite3?|sql|zip|7z|rar|tar|gz|bz2|xz)$/i.test(raw)) {
+                    return false;
+                }
+                return true;
+            }
+
+            function inferDirectorySubtypeFromName(varName) {
+                const clean = String(varName || '').toLowerCase();
+                if (!clean) return 'workdir';
+                if (/(ruta|path|carpeta|directorio|folder)/.test(clean)) return 'workdir';
+                if (/(work|wd|cwd|root|base|project|home|input|data)/.test(clean)) return 'workdir';
+                if (/(out|output|result|export|save|dest|target)/.test(clean)) return 'outdir';
+                if (/(source|raw|input|data)/.test(clean)) return 'indir';
+                return 'workdir';
+            }
+
+            function inferWorkDirFromFilePath(filePath) {
+                const value = String(filePath || '');
+                if (!/[\\/]/.test(value)) return '';
+                const normalized = value.replace(/\\+/g, '/');
+                const idx = normalized.lastIndexOf('/');
+                if (idx <= 0) return '';
+                return value.slice(0, idx);
+            }
+
             // 1. Detect {{template}} variables
             const templateRegex = /\{\{\s*([^}]+?)\s*\}\}/g;
             while ((match = templateRegex.exec(code)) !== null) {
@@ -7278,32 +7487,79 @@
                 { regex: /cd\s+["']?([^\s"';]+)["']?/gi, type: 'workdir', label: t('var-label-workdir') },
 
                 // Output directory patterns
-                { regex: /output[_-]?dir\s*=\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-outdir') },
-                { regex: /out[_-]?path\s*=\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-outdir') },
-                { regex: /results[_-]?dir\s*=\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-results') },
+                { regex: /output[_-]?dir\s*(?:<-|=)\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-outdir') },
+                { regex: /out[_-]?path\s*(?:<-|=)\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-outdir') },
+                { regex: /results?[_-]?dir\s*(?:<-|=)\s*["']([^"']+)["']/gi, type: 'outdir', label: t('var-label-results') },
 
                 // Input directory patterns
-                { regex: /input[_-]?dir\s*=\s*["']([^"']+)["']/gi, type: 'indir', label: t('var-label-indir') },
-                { regex: /data[_-]?dir\s*=\s*["']([^"']+)["']/gi, type: 'indir', label: t('var-label-indir') }
+                { regex: /input[_-]?dir\s*(?:<-|=)\s*["']([^"']+)["']/gi, type: 'indir', label: t('var-label-indir') },
+                { regex: /data[_-]?dir\s*(?:<-|=)\s*["']([^"']+)["']/gi, type: 'indir', label: t('var-label-indir') },
+
+                // Generic variable assignment that looks like a directory
+                {
+                    regex: /([A-Za-z][A-Za-z0-9_.-]*(?:dir|path|folder|wd|cwd|root|base))\s*(?:<-|=)\s*["']([^"']+)["']/gi,
+                    type: 'auto',
+                    label: t('var-label-workdir'),
+                    pathGroup: 2,
+                    nameGroup: 1
+                },
+                {
+                    regex: /([A-Za-z][A-Za-z0-9_.-]*(?:ruta|carpeta|directorio|archivo|archivos)[A-Za-z0-9_.-]*)\s*(?:<-|=)\s*["']([^"']+)["']/gi,
+                    type: 'auto',
+                    label: t('var-label-workdir'),
+                    pathGroup: 2,
+                    nameGroup: 1
+                }
             ];
 
             directoryPatterns.forEach(pattern => {
                 while ((match = pattern.regex.exec(code)) !== null) {
-                    const dirPath = match[1];
-                    const varName = pattern.type === 'workdir' ? 'work_dir' :
-                        pattern.type === 'outdir' ? 'output_dir' :
+                    const pathGroup = pattern.pathGroup || 1;
+                    const dirPath = match[pathGroup];
+                    if (!pathLooksLikeDirectory(dirPath)) continue;
+
+                    let resolvedType = pattern.type;
+                    if (resolvedType === 'auto') {
+                        const nameGroup = pattern.nameGroup || 1;
+                        resolvedType = inferDirectorySubtypeFromName(match[nameGroup]);
+                    }
+
+                    const varName = resolvedType === 'workdir' ? 'work_dir' :
+                        resolvedType === 'outdir' ? 'output_dir' :
                             'input_dir';
 
                     detectedVars.push({
                         name: varName,
                         type: 'directory',
-                        subtype: pattern.type,
+                        subtype: resolvedType,
                         original: match[0],
                         value: dirPath,
-                        label: pattern.label
+                        label: resolvedType === 'outdir'
+                            ? t('var-label-outdir')
+                            : resolvedType === 'indir'
+                                ? t('var-label-indir')
+                                : t('var-label-workdir')
                     });
                 }
             });
+
+            const hasWorkDir = detectedVars.some(v => v.type === 'directory' && v.name === 'work_dir' && v.value);
+            if (!hasWorkDir) {
+                const firstDirectory = detectedVars.find(v => v.type === 'directory' && v.value);
+                const firstFileWithPath = detectedVars.find(v => v.type === 'file' && v.value && /[\\/]/.test(v.value));
+                const inferredWorkDir = firstDirectory?.value || inferWorkDirFromFilePath(firstFileWithPath?.value || '');
+
+                if (inferredWorkDir) {
+                    detectedVars.unshift({
+                        name: 'work_dir',
+                        type: 'directory',
+                        subtype: 'workdir',
+                        original: inferredWorkDir,
+                        value: inferredWorkDir,
+                        label: t('var-label-workdir')
+                    });
+                }
+            }
 
             // 4. Detect output file patterns (NEW)
             const outputFilePatterns = [
@@ -8428,6 +8684,8 @@
         function handleMultipleFiles(files) {
             const { supported, ignored } = filterSupportedFiles(files);
 
+            currentBatchTag = null;
+
             if (ignored > 0) {
                 showToast(t('toast-unsupported-files', { count: ignored }), 'error');
             }
@@ -8513,6 +8771,7 @@
                     if (shouldCancel) {
                         pendingFilesQueue = [];
                         isProcessingQueue = false;
+                        currentBatchTag = null;
                     }
                 }
             });
